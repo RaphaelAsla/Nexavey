@@ -1,0 +1,2 @@
+CompileFlags:
+    Add: [-std=c++20, -Wall, -Wno-long-long, -Wno-variadic-macros, -fexceptions, -ferror-limit=10000, -DNDEBUG, -I/usr/lib/include, -I/usr/include/, -I/opt/cuda/include/]

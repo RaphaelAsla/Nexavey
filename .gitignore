@@ -1,0 +1,12 @@
+build
+.cache
+compile_commands.json
+src/graphics/Material.cpp
+src/graphics/Material.h
+src/graphics/Mesh.cpp
+src/graphics/Mesh.h
+src/graphics/Shader.cpp
+src/graphics/Shader.h
+src/graphics/Texture.cpp
+src/graphics/Texture.h
+src/world
