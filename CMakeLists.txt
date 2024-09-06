@@ -4,7 +4,6 @@ project(Nexavey)
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Check if POLICY CMP0072 exist and make use of it if it does
 if (POLICY CMP0072)

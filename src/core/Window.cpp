@@ -1,6 +1,6 @@
-#include "Window.h"
+#include "Window.hpp"
 
-#include "Logger.h"
+#include "Logger.hpp"
 #include "glad/gl.h"
 
 namespace nex {

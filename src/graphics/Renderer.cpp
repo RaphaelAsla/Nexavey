@@ -1,8 +1,8 @@
-#include "Renderer.h"
+#include "Renderer.hpp"
 
 #include <glad/gl.h>
 
-#include "../core/Logger.h"
+#include "../core/Logger.hpp"
 
 namespace nex {
     unsigned int Renderer::shader_program;

@@ -1,9 +1,9 @@
-#include "Engine.h"
+#include "Engine.hpp"
 
-#include "../graphics/Renderer.h"
-#include "Input.h"
-#include "Logger.h"
-#include "Window.h"
+#include "../graphics/Renderer.hpp"
+#include "Input.hpp"
+#include "Logger.hpp"
+#include "Window.hpp"
 #include "glad/gl.h"
 
 namespace nex {

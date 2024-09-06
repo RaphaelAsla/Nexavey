@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "core/Engine.h"
+#include "core/Engine.hpp"
 
 int main() {
     nex::Engine app{};

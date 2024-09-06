@@ -1,7 +1,7 @@
-#include "Input.h"
+#include "Input.hpp"
 
-#include "Logger.h"
-#include "Window.h"
+#include "Logger.hpp"
+#include "Window.hpp"
 
 namespace nex {
     GLFWwindow* Input::m_window = nullptr;
