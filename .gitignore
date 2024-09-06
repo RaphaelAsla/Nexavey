@@ -2,11 +2,11 @@ build
 .cache
 compile_commands.json
 src/graphics/Material.cpp
-src/graphics/Material.h
+src/graphics/Material.hpp
 src/graphics/Mesh.cpp
-src/graphics/Mesh.h
+src/graphics/Mesh.hpp
 src/graphics/Shader.cpp
-src/graphics/Shader.h
+src/graphics/Shader.hpp
 src/graphics/Texture.cpp
-src/graphics/Texture.h
+src/graphics/Texture.hpp
 src/world
