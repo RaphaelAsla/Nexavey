@@ -8,7 +8,6 @@ namespace nex {
         enum LogLevel { RELEASE, DEBUG };
 
         static void Log(const std::string& message, LogLevel level);
-
         static void LogRelease(const std::string& message);
         static void LogDebug(const std::string& message);
 

@@ -25,7 +25,6 @@ namespace nex {
       private:
         std::vector<VertexData> vertex_data;
         std::vector<unsigned int> indices;
-
         unsigned int VAO;
         unsigned int VBO;
         unsigned int EBO;
