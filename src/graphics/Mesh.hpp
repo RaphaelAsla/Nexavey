@@ -14,7 +14,7 @@ namespace nex {
     class Mesh {
       public:
         Mesh() = default;
-        ~Mesh();
+        ~Mesh() = default;
 
         Mesh(const std::vector<VertexData>& vert_data, const std::vector<unsigned int>& indices);
 

@@ -7,10 +7,6 @@ namespace nex {
         CreateMesh();
     }
 
-    Mesh::~Mesh() {
-        DeleteMesh();
-    }
-
     void Mesh::CreateMesh() {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);

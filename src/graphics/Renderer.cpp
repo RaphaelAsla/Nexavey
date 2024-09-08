@@ -37,14 +37,23 @@ namespace nex {
     }
 
     void Renderer::CreateMeshes() {
-        std::vector<VertexData> vertices;
-        vertices.emplace_back(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        vertices.emplace_back(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        vertices.emplace_back(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        vertices.emplace_back(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        std::vector<unsigned int> indices = {0, 1, 3, 1, 2, 3};
+        std::vector<VertexData> square_vertices;
+        square_vertices.emplace_back(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        square_vertices.emplace_back(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        square_vertices.emplace_back(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        square_vertices.emplace_back(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        std::vector<unsigned int> square_indices = {0, 1, 3, 1, 2, 3};
 
-        meshes.emplace_back(vertices, indices);
+        meshes.emplace_back(square_vertices, square_indices);
+
+        std::vector<VertexData> triangle_vertices;
+        triangle_vertices.emplace_back(glm::vec3(-0.25f, -0.25f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        triangle_vertices.emplace_back(glm::vec3(0.25f, -0.25f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        triangle_vertices.emplace_back(glm::vec3(0.0f, 0.25f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+        std::vector<unsigned int> triangle_indices = {0, 1, 2};
+
+        meshes.emplace_back(triangle_vertices, triangle_indices);
 
         Logger::Log("Creation of meshes completed successfully, Renderer::CreateShaders()", Logger::DEBUG);
     }
