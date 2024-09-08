@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Mesh.hpp"
 #include "Shader.hpp"
 
 namespace nex {
@@ -12,13 +13,15 @@ namespace nex {
         static void Tick();
 
         static void CreateShaders();
-        static void MakeTriangle();
-        static void DrawTriangle();
+        static void CreateMeshes();
+        static void DrawMeshes();
+        static void DeleteMeshes();
         static void Clear();
 
       private:
+        static std::vector<Shader> shaders;
+        static std::vector<Mesh> meshes;
         static unsigned int shader_program;
         static unsigned int VBO, VAO;
-        static std::vector<Shader> shaders;
     };
 }  // namespace nex
