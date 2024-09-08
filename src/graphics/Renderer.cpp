@@ -5,9 +5,10 @@
 #include "../core/Logger.hpp"
 
 namespace nex {
-    unsigned int Renderer::shader_program;
-    unsigned int Renderer::VAO;
-    unsigned int Renderer::VBO;
+    unsigned int Renderer::shader_program = 0;
+    unsigned int Renderer::VAO = 0;
+    unsigned int Renderer::VBO = 0;
+    std::vector<Shader> Renderer::shaders = {};
 
     void Renderer::Initialize() {
         CreateShaders();
@@ -29,46 +30,18 @@ namespace nex {
     }
 
     void Renderer::CreateShaders() {
-        const char* vertex_shader_source =
-            "#version 330 core\n"
-            "layout (location = 0) in vec3 aPos;\n"
-            "void main()\n"
-            "{\n"
-            "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-            "}\0";
-
-        const char* fragment_shader_source =
-            "#version 330 core\n"
-            "out vec4 FragColor;\n"
-            "void main()\n"
-            "{\n"
-            "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-            "}\0";
-
-        unsigned int vertex_shader;
-        vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertex_shader, 1, &vertex_shader_source, nullptr);
-        glCompileShader(vertex_shader);
-
-        unsigned int fragment_shader;
-        fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, 1, &fragment_shader_source, nullptr);
-        glCompileShader(fragment_shader);
-
-        shader_program = glCreateProgram();
-
-        glAttachShader(shader_program, vertex_shader);
-        glAttachShader(shader_program, fragment_shader);
-        glLinkProgram(shader_program);
-
-        glDeleteShader(vertex_shader);
-        glDeleteShader(fragment_shader);
+        shaders.emplace_back(Shader("../shaders/triangle.vert.glsl", "../shaders/triangle.frag.glsl"));
 
         Logger::Log("Creation of shaders completed successfully, Renderer::CreateShaders()", Logger::DEBUG);
     }
 
     void Renderer::MakeTriangle() {
-        float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+        float vertices[] = {
+            // positions         // colors
+            0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
+            0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
+        };
 
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -78,8 +51,11 @@ namespace nex {
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
@@ -88,7 +64,7 @@ namespace nex {
     }
 
     void Renderer::DrawTriangle() {
-        glUseProgram(shader_program);
+        shaders[0].use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
     }

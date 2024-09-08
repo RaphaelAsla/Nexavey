@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+#include "Shader.hpp"
+
 namespace nex {
     class Renderer {
       public:
@@ -15,5 +19,6 @@ namespace nex {
       private:
         static unsigned int shader_program;
         static unsigned int VBO, VAO;
+        static std::vector<Shader> shaders;
     };
 }  // namespace nex
