@@ -18,6 +18,7 @@ namespace nex {
     Engine::~Engine() {
         Window::ShutDown();
         Renderer::ShutDown();
+
         Logger::Log("Engine destruction completed successfully, Engine::~Engine()", Logger::DEBUG);
     }
 

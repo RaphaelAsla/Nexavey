@@ -8,6 +8,7 @@ namespace nex {
 
     void Input::Initialize() {
         m_window = Window::GetGLFWwindow();
+
         Logger::Log("Input initialization completed successfully, Input::Initialize()", Logger::DEBUG);
     }
 
@@ -19,7 +20,6 @@ namespace nex {
 
     bool Input::GetKey(int keycode) {
         const int state = glfwGetKey(m_window, keycode);
-
         return state == GLFW_PRESS;
     }
 }  // namespace nex
