@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "Mesh.hpp"
-#include "Shader.hpp"
 
 namespace nex {
     class Renderer {
@@ -19,9 +18,7 @@ namespace nex {
         static void Clear();
 
       private:
-        static std::vector<Shader> shaders;
-        static std::vector<Mesh> meshes;
-        static unsigned int shader_program;
-        static unsigned int VBO, VAO;
+        static std::vector<Shader> m_shaders;
+        static std::vector<Mesh> m_meshes;
     };
 }  // namespace nex

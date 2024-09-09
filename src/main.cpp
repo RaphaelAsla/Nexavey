@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "core/Engine.hpp"
+#include "glad/gl.h"
 
 int main() {
     nex::Engine app{};

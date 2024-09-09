@@ -32,5 +32,7 @@ target_link_libraries(Nexavey
 	OpenGL::GL
 )
 
+target_include_directories(Nexavey SYSTEM PUBLIC "libs/stb_image")
+
 # Optionally, add custom compile options
 target_compile_options(Nexavey PRIVATE -Wall -Wextra)
