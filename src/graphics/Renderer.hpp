@@ -2,7 +2,8 @@
 
 #include <vector>
 
-#include "Mesh.hpp"
+#include "../world/Entity.hpp"
+#include "Material.hpp"
 
 namespace nex {
     class Renderer {
@@ -11,14 +12,12 @@ namespace nex {
         static void ShutDown();
         static void Tick();
 
-        static void CreateShaders();
-        static void CreateMeshes();
-        static void DrawMeshes();
-        static void DeleteMeshes();
+        static void CreateEntities();
+        static void CreateShadersAndTextures();
         static void Clear();
 
       private:
-        static std::vector<Shader> m_shaders;
-        static std::vector<Mesh> m_meshes;
+        static std::vector<Entity> m_entities;
+        static std::vector<std::shared_ptr<Material>> m_materials;
     };
 }  // namespace nex

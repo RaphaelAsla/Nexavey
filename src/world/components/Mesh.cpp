@@ -7,11 +7,17 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace nex {
-    Mesh::Mesh(const std::vector<VertexData>& vd, const std::vector<unsigned int>& inds, const Texture& tex, const Shader& shdr) : m_vertex_data(vd), m_indices(inds), m_texture(tex), m_shader(shdr) {
-        CreateMesh();
+
+    Mesh::Mesh(const std::vector<VertexData>& vertex_data, const std::vector<unsigned int>& indices, const std::shared_ptr<Material>& material)
+        : m_vertex_data(vertex_data)
+        , m_indices(indices)
+        , m_material(material.get()) {}
+
+    Mesh::~Mesh() {
+        OnDelete();
     }
 
-    void Mesh::CreateMesh() {
+    void Mesh::Initialize() {
         glGenVertexArrays(1, &m_VAO);
         glGenBuffers(1, &m_VBO);
         glGenBuffers(1, &m_EBO);
@@ -34,14 +40,27 @@ namespace nex {
         glEnableVertexAttribArray(2);
     }
 
-    void Mesh::DeleteMesh() {
+    void Mesh::OnCreate() {}
+
+    void Mesh::OnDelete() {
         glDeleteVertexArrays(1, &m_VAO);
         glDeleteBuffers(1, &m_VBO);
         glDeleteBuffers(1, &m_VAO);
     }
 
-    void Mesh::DrawMesh() {
-        m_texture.Bind();
+    void Mesh::SetMaterial(const std::shared_ptr<Material>& material) {
+        assert(material);
+        m_material = material.get();
+    }
+
+    void Mesh::SetGeometry(const std::vector<VertexData>& vertex_data, const std::vector<unsigned int>& indices) {
+        m_vertex_data = vertex_data;
+        m_indices = indices;
+        Initialize();
+    }
+
+    void Mesh::OnTick() {
+        m_material->Use();
         glBindVertexArray(m_VAO);
         glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     }
@@ -49,14 +68,14 @@ namespace nex {
     void Mesh::RotateLeft() {
         glm::mat4 trans = glm::mat4(1.0f);
         trans = glm::rotate(trans, (float)(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        unsigned int transformLoc = glGetUniformLocation(m_shader.ID, "transform");
+        unsigned int transformLoc = glGetUniformLocation(m_material->GetShaderID(), "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
     }
 
     void Mesh::RotateRight() {
         glm::mat4 trans = glm::mat4(1.0f);
         trans = glm::rotate(trans, -(float)(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        unsigned int transformLoc = glGetUniformLocation(m_shader.ID, "transform");
+        unsigned int transformLoc = glGetUniformLocation(m_material->GetShaderID(), "transform");
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
     }
 

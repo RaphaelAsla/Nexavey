@@ -38,4 +38,8 @@ namespace nex {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, ID);
     }
+
+    unsigned int Texture::GetID() {
+        return ID;
+    }
 }  // namespace nex

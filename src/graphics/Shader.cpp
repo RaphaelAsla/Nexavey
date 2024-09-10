@@ -63,6 +63,10 @@ namespace nex {
     void Shader::Use() {
         glUseProgram(ID);
     }
+    // ------------------------------------------------------------------------
+    unsigned int Shader::GetID() {
+        return ID;
+    }
     // utility uniform functions
     // ------------------------------------------------------------------------
     void Shader::SetBool(const std::string& name, bool value) const {

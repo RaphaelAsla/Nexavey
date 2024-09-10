@@ -3,80 +3,70 @@
 #include <glad/gl.h>
 
 #include "../core/Logger.hpp"
+#include "../world/components/Mesh.hpp"
 
 namespace nex {
-    std::vector<Shader> Renderer::m_shaders = {};
-    std::vector<Mesh> Renderer::m_meshes = {};
+    std::vector<Entity> Renderer::m_entities = {};
+    std::vector<std::shared_ptr<Material>> Renderer::m_materials = {};
 
     void Renderer::Initialize() {
-        CreateShaders();
-        CreateMeshes();
+        CreateShadersAndTextures();
+        CreateEntities();
         Logger::Log("Renderer initialization completed successfully, Renderer::Initialize()", Logger::DEBUG);
     }
 
     void Renderer::ShutDown() {
-        DeleteMeshes();
-        for (Shader& shader : m_shaders) {
-            shader.Delete();
+        for (Entity& entity : m_entities) {
+            entity.OnDelete();
         }
         Logger::Log("Renderer shutdown completed successfully, Renderer::ShutDown()", Logger::DEBUG);
     }
 
     void Renderer::Tick() {
         Clear();
-        DrawMeshes();
+        for (size_t i = 0; i < m_entities.size(); i++) {
+            m_entities[i].Tick();
+        }
     }
 
-    void Renderer::CreateShaders() {
-        m_shaders.emplace_back(Shader("../shaders/simple.vert.glsl", "../shaders/simple.frag.glsl"));
-
-        Logger::Log("Creation of shaders completed successfully, Renderer::CreateShaders()", Logger::DEBUG);
+    void Renderer::CreateShadersAndTextures() {
+        auto mat = std::make_shared<Material>(std::make_shared<Shader>("../shaders/simple.vert.glsl", "../shaders/simple.frag.glsl"));
+        mat->SetTexture(std::make_shared<Texture>("../assets/textures/trippy.jpg"));
+        m_materials.emplace_back(mat);
     }
 
-    void Renderer::CreateMeshes() {
-        // rectangle
+    void Renderer::CreateEntities() {
+        Entity rectangle;
+        Entity triangle;
+
+        // rectangle Mesh
         std::vector<VertexData> square_vertices;
+        std::vector<unsigned int> square_indices = {0, 1, 3, 1, 2, 3};
         square_vertices.emplace_back(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         square_vertices.emplace_back(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f));
         square_vertices.emplace_back(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f));
         square_vertices.emplace_back(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f));
-        std::vector<unsigned int> square_indices = {0, 1, 3, 1, 2, 3};
-        Texture tex("../assets/textures/wall.jpg");
-        m_meshes.emplace_back(square_vertices, square_indices, tex, m_shaders[0]);
+        auto rectangle_mesh = std::make_shared<Mesh>();
+        rectangle_mesh->SetMaterial(m_materials[0]);
+        rectangle_mesh->SetGeometry(square_vertices, square_indices);
 
         // triangle
         std::vector<VertexData> triangle_vertices;
+        std::vector<unsigned int> triangle_indices = {0, 1, 2};
         triangle_vertices.emplace_back(glm::vec3(-0.25f, -0.25f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f));
         triangle_vertices.emplace_back(glm::vec3(0.25f, -0.25f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f));
         triangle_vertices.emplace_back(glm::vec3(0.0f, 0.25f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.5f, 1.0f));
-        std::vector<unsigned int> triangle_indices = {0, 1, 2};
-        m_meshes.emplace_back(triangle_vertices, triangle_indices, tex, m_shaders[0]);
+        auto triangle_mesh = std::make_shared<Mesh>();
+        triangle_mesh->SetMaterial(m_materials[0]);
+        triangle_mesh->SetGeometry(triangle_vertices, triangle_indices);
 
-        Logger::Log("Creation of meshes completed successfully, Renderer::CreateShaders()", Logger::DEBUG);
-    }
+        rectangle.AddComponent(rectangle_mesh);
+        triangle.AddComponent(triangle_mesh);
 
-    void Renderer::DrawMeshes() {
-        m_shaders[0].Use();
+        m_entities.emplace_back(rectangle);
+        m_entities.emplace_back(triangle);
 
-        for (size_t i = 0; i < m_meshes.size(); i++) {
-            m_meshes[i].DrawMesh();
-            switch (i) {
-                case 0:
-                    m_meshes[i].RotateLeft();
-                    break;
-                case 1:
-                    m_meshes[i].RotateRight();
-                    break;
-            }
-        }
-    }
-
-    void Renderer::DeleteMeshes() {
-        for (Mesh& mesh : m_meshes) {
-            mesh.DeleteMesh();
-        }
-
-        Logger::Log("Deletion of meshes completed successfully, Renderer::CreateShaders()", Logger::DEBUG);
+        Logger::Log("Creation of Entities completed successfully, Renderer::CreateEntities()", Logger::DEBUG);
     }
 
     void Renderer::Clear() {
