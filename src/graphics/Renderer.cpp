@@ -1,31 +1,41 @@
 #include "Renderer.hpp"
 
+#include <GLFW/glfw3.h>
 #include <glad/gl.h>
 
 #include "../core/Logger.hpp"
 #include "../world/components/Mesh.hpp"
 
 namespace nex {
-    std::vector<Entity> Renderer::m_entities = {};
+    std::vector<std::shared_ptr<Entity>> Renderer::m_entities = {};
     std::vector<std::shared_ptr<Material>> Renderer::m_materials = {};
 
     void Renderer::Initialize() {
         CreateShadersAndTextures();
         CreateEntities();
+        glEnable(GL_DEPTH_TEST);
         Logger::Log("Renderer initialization completed successfully, Renderer::Initialize()", Logger::DEBUG);
     }
 
     void Renderer::ShutDown() {
-        for (Entity& entity : m_entities) {
-            entity.OnDelete();
+        for (auto& entity : m_entities) {
+            entity->OnDelete();
         }
         Logger::Log("Renderer shutdown completed successfully, Renderer::ShutDown()", Logger::DEBUG);
     }
 
     void Renderer::Tick() {
+        m_entities[0]->SetRotation((float)glfwGetTime() * 100, glm::vec3(1.0f, 1.0f, 0.0f));
+        m_entities[1]->SetRotation(-(float)glfwGetTime() * 100, glm::vec3(0.0f, 1.0f, 0.0f));
+        m_entities[0]->SetPosition(glm::vec3(-0.8f, 0.0f, -1.0f));
+        m_entities[1]->SetPosition(glm::vec3(0.8f, 0.0f, -1.0f));
+        m_entities[0]->SetScale(glm::vec3(0.5f));
+        m_entities[1]->SetScale(glm::vec3(0.5f));
+
         Clear();
+
         for (size_t i = 0; i < m_entities.size(); i++) {
-            m_entities[i].Tick();
+            m_entities[i]->Tick();
         }
     }
 
@@ -36,32 +46,118 @@ namespace nex {
     }
 
     void Renderer::CreateEntities() {
-        Entity rectangle;
-        Entity triangle;
+        std::shared_ptr<Entity> rectangle = std::make_shared<Entity>();
+        std::shared_ptr<Entity> triangle = std::make_shared<Entity>();
 
-        // rectangle Mesh
-        std::vector<VertexData> square_vertices;
-        std::vector<unsigned int> square_indices = {0, 1, 3, 1, 2, 3};
-        square_vertices.emplace_back(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
-        square_vertices.emplace_back(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f));
-        square_vertices.emplace_back(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f));
-        square_vertices.emplace_back(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f));
-        auto rectangle_mesh = std::make_shared<Mesh>();
-        rectangle_mesh->SetMaterial(m_materials[0]);
-        rectangle_mesh->SetGeometry(square_vertices, square_indices);
+        std::vector<VertexData> cube_vertices = {
+            // Front face
+            {glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},    // Top-right
+            {glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},   // Bottom-right
+            {glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 0.0f)},  // Bottom-left
+            {glm::vec3(-1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)},   // Top-left
 
-        // triangle
-        std::vector<VertexData> triangle_vertices;
-        std::vector<unsigned int> triangle_indices = {0, 1, 2};
-        triangle_vertices.emplace_back(glm::vec3(-0.25f, -0.25f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f));
-        triangle_vertices.emplace_back(glm::vec3(0.25f, -0.25f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f));
-        triangle_vertices.emplace_back(glm::vec3(0.0f, 0.25f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.5f, 1.0f));
-        auto triangle_mesh = std::make_shared<Mesh>();
-        triangle_mesh->SetMaterial(m_materials[0]);
-        triangle_mesh->SetGeometry(triangle_vertices, triangle_indices);
+            // Back face
+            {glm::vec3(1.0f, 1.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(1.0f, 0.0f)},
+            {glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},
 
-        rectangle.AddComponent(rectangle_mesh);
-        triangle.AddComponent(triangle_mesh);
+            // Left face
+            {glm::vec3(-1.0f, 1.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+            {glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+
+            // Right face
+            {glm::vec3(1.0f, 1.0f, -1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+            {glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+
+            // Top face
+            {glm::vec3(1.0f, 1.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+            {glm::vec3(-1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(-1.0f, 1.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+
+            // Bottom face
+            {glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+            {glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},
+        };
+
+        std::vector<unsigned int> cube_indices = {// Front face
+                                                  0, 1, 2, 0, 2, 3,
+                                                  // Back face
+                                                  4, 5, 6, 4, 6, 7,
+                                                  // Left face
+                                                  8, 9, 10, 8, 10, 11,
+                                                  // Right face
+                                                  12, 13, 14, 12, 14, 15,
+                                                  // Top face
+                                                  16, 17, 18, 16, 18, 19,
+                                                  // Bottom face
+                                                  20, 21, 22, 20, 22, 23};
+
+        std::vector<VertexData> pyramid_vertices = {
+            // Base face
+            {glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 1.0f)},    // Bottom-right
+            {glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(1.0f, 0.0f)},   // Bottom-left
+            {glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Top-left
+            {glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec2(0.0f, 1.0f)},   // Top-right
+
+            // Apex vertex (used for all sides)
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.5f, 0.5f)},  // Apex
+
+            // Front face
+            {glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 1.0f)},   // Base bottom-right
+            {glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(1.0f, 0.0f)},  // Base bottom-left
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.5f, 0.5f)},    // Apex
+
+            // Right face
+            {glm::vec3(1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},   // Base bottom-left
+            {glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},  // Base top-left
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(0.5f, 0.5f)},     // Apex
+
+            // Back face
+            {glm::vec3(-1.0f, -1.0f, -1.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 0.0f)},  // Base top-left
+            {glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.0f, 1.0f)},   // Base top-right
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec2(0.5f, 0.5f)},     // Apex
+
+            // Left face
+            {glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)},  // Base top-right
+            {glm::vec3(1.0f, -1.0f, 1.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},   // Base bottom-right
+            {glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec2(0.5f, 0.5f)},    // Apex
+        };
+
+        std::vector<unsigned int> pyramid_indices = {// Base face
+                                                     0, 1, 2, 0, 2, 3,
+
+                                                     // Front face
+                                                     4, 5, 6,
+
+                                                     // Right face
+                                                     7, 8, 9,
+
+                                                     // Back face
+                                                     10, 11, 12,
+
+                                                     // Left face
+                                                     13, 14, 15};
+
+        // Create a cube mesh
+        auto cube_mesh = std::make_shared<Mesh>();
+        cube_mesh->SetMaterial(m_materials[0]);
+        cube_mesh->SetGeometry(cube_vertices, cube_indices);
+
+        // Create a pyramid mesh
+        auto pyramid_mesh = std::make_shared<Mesh>();
+        pyramid_mesh->SetMaterial(m_materials[0]);
+        pyramid_mesh->SetGeometry(pyramid_vertices, pyramid_indices);
+
+        rectangle->AddComponent(cube_mesh);
+        triangle->AddComponent(pyramid_mesh);
 
         m_entities.emplace_back(rectangle);
         m_entities.emplace_back(triangle);
@@ -71,6 +167,6 @@ namespace nex {
 
     void Renderer::Clear() {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 }  // namespace nex

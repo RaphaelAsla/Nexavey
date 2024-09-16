@@ -17,7 +17,7 @@ namespace nex {
         static void Clear();
 
       private:
-        static std::vector<Entity> m_entities;
+        static std::vector<std::shared_ptr<Entity>> m_entities;
         static std::vector<std::shared_ptr<Material>> m_materials;
     };
 }  // namespace nex

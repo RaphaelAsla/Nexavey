@@ -6,12 +6,13 @@
 #include <vector>
 
 #include "../../graphics/Material.hpp"
+#include "../../world/Entity.hpp"
 #include "Component.hpp"
 
 namespace nex {
     struct VertexData {
         glm::vec3 position;
-        glm::vec3 color;
+        glm::vec3 normal;
         glm::vec2 uv;
     };
 
@@ -26,14 +27,16 @@ namespace nex {
         void OnDelete();
         void OnTick();
 
+        void SetParent(Entity* parent);
+        Entity* GetParent();
+
         void SetMaterial(const std::shared_ptr<Material>& material);
         void SetGeometry(const std::vector<VertexData>& vertex_data, const std::vector<unsigned int>& indices);
-        void RotateLeft();
-        void RotateRight();
 
       private:
         std::vector<VertexData> m_vertex_data;
         std::vector<unsigned int> m_indices;
+        Entity* m_parent = nullptr;
         Material* m_material = nullptr;
         unsigned int m_VAO;
         unsigned int m_VBO;

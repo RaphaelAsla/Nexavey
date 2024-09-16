@@ -28,7 +28,7 @@ namespace nex {
         glBufferData(GL_ARRAY_BUFFER, m_vertex_data.size() * sizeof(VertexData), m_vertex_data.data(), GL_STATIC_DRAW);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(float), m_indices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), m_indices.data(), GL_STATIC_DRAW);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void*)0);
         glEnableVertexAttribArray(0);
@@ -48,6 +48,15 @@ namespace nex {
         glDeleteBuffers(1, &m_VAO);
     }
 
+    void Mesh::SetParent(Entity* parent) {
+        assert(parent);
+        m_parent = parent;
+    }
+
+    Entity* Mesh::GetParent() {
+        return m_parent;
+    }
+
     void Mesh::SetMaterial(const std::shared_ptr<Material>& material) {
         assert(material);
         m_material = material.get();
@@ -61,22 +70,8 @@ namespace nex {
 
     void Mesh::OnTick() {
         m_material->Use();
+        m_material->SetUniforms(m_parent->GetTransformMatrix());
         glBindVertexArray(m_VAO);
         glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, nullptr);
     }
-
-    void Mesh::RotateLeft() {
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, (float)(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        unsigned int transformLoc = glGetUniformLocation(m_material->GetShaderID(), "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-    }
-
-    void Mesh::RotateRight() {
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, -(float)(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        unsigned int transformLoc = glGetUniformLocation(m_material->GetShaderID(), "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-    }
-
 }  // namespace nex

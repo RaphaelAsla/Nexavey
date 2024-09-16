@@ -1,6 +1,8 @@
 #pragma once
 
 namespace nex {
+    class Entity;
+
     class Component {
       public:
         Component() = default;
@@ -10,8 +12,6 @@ namespace nex {
         virtual void OnCreate() {};
         virtual void OnDelete() {};
         virtual void OnTick() {};
-
-      private:
-        bool m_enabled = false;
+        virtual void SetParent([[maybe_unused]] Entity* parent) {};
     };
 }  // namespace nex
