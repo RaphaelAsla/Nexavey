@@ -8,6 +8,7 @@ namespace nex {
     int Window::m_height = 720;
     std::string Window::m_window_title = "Nexavey";
     GLFWwindow* Window::m_window = nullptr;
+    std::shared_ptr<Camera> Window::m_active_camera = nullptr;
 
     void Window::Initialize() {
         glfwInit();
@@ -38,7 +39,6 @@ namespace nex {
 
     void Window::Tick() {
         Window::SwapBuffers();
-        glfwPollEvents();
     }
 
     bool Window::ShouldClose() {

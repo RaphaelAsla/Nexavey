@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+#include "../world/components/Camera.hpp"
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
@@ -14,6 +16,16 @@ namespace nex {
         static void Close();
         static void SwapBuffers();
         static GLFWwindow* GetGLFWwindow();
+
+        static int GetWidth() {
+            return m_width;
+        }
+
+        static int GetHeight() {
+            return m_height;
+        }
+
+        static std::shared_ptr<Camera> m_active_camera;
 
       private:
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);

@@ -4,6 +4,8 @@
 #include <glad/gl.h>
 
 #include "../core/Logger.hpp"
+#include "../core/Window.hpp"
+#include "../world/components/Camera.hpp"
 #include "../world/components/Mesh.hpp"
 
 namespace nex {
@@ -48,6 +50,7 @@ namespace nex {
     void Renderer::CreateEntities() {
         std::shared_ptr<Entity> rectangle = std::make_shared<Entity>();
         std::shared_ptr<Entity> triangle = std::make_shared<Entity>();
+        std::shared_ptr<Entity> camera = std::make_shared<Entity>();
 
         std::vector<VertexData> cube_vertices = {
             // Front face
@@ -159,8 +162,13 @@ namespace nex {
         rectangle->AddComponent(cube_mesh);
         triangle->AddComponent(pyramid_mesh);
 
+        auto active_camera = std::make_shared<Camera>(glm::vec3(0.0f, 0.0f, 3.0f));
+        Window::m_active_camera = active_camera;
+        camera->AddComponent(active_camera);
+
         m_entities.emplace_back(rectangle);
         m_entities.emplace_back(triangle);
+        m_entities.emplace_back(camera);
 
         Logger::Log("Creation of Entities completed successfully, Renderer::CreateEntities()", Logger::DEBUG);
     }

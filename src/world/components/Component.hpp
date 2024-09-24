@@ -13,5 +13,8 @@ namespace nex {
         virtual void OnDelete() {};
         virtual void OnTick() {};
         virtual void SetParent([[maybe_unused]] Entity* parent) {};
+
+      protected:
+        [[maybe_unused]] Entity* m_parent = nullptr;
     };
 }  // namespace nex

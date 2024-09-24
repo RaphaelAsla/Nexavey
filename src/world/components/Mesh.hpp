@@ -36,7 +36,6 @@ namespace nex {
       private:
         std::vector<VertexData> m_vertex_data;
         std::vector<unsigned int> m_indices;
-        Entity* m_parent = nullptr;
         Material* m_material = nullptr;
         unsigned int m_VAO;
         unsigned int m_VBO;

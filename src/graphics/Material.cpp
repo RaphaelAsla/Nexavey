@@ -4,6 +4,8 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 
+#include "../core/Window.hpp"
+
 namespace nex {
     Material::Material(const std::shared_ptr<Shader>& shader) {
         assert(shader);
@@ -32,16 +34,9 @@ namespace nex {
     }
 
     void Material::SetUniforms(const glm::mat4& transform_matrix) {
-        glm::mat4 model = transform_matrix;
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
-        m_shader->setMat4("model", model);
-        m_shader->setMat4("view", view);
-        m_shader->setMat4("projection", projection);
+        m_shader->setMat4("model", transform_matrix);
+        m_shader->setMat4("view", Window::m_active_camera->GetViewMatrix());
+        m_shader->setMat4("projection", Window::m_active_camera->GetProjectionMatrix());
     }
 
     unsigned int Material::GetShaderID() {
