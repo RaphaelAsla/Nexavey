@@ -1,7 +1,7 @@
 # Nexavey
 
 <p align="center">
-  <img src="images/image_0.png" width="150" />
+  <img src="images/image_0.png" width="500" />
 </p>
 
 ## Compilation
