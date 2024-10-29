@@ -14,7 +14,7 @@ If above requirements are fulfilled, just run the following
 mkdir build && cd build
 CXX=clang++ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 ninja
-./fractal
+./Nexavey
 ```
 <br>
 You can also move around with WASD/CTRL/SPACE and look around with the mouse !
