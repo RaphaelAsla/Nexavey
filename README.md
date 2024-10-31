@@ -17,4 +17,3 @@ ninja
 ./Nexavey
 ```
 <br>
-You can also move around with WASD/CTRL/SPACE and look around with the mouse !
