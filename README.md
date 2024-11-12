@@ -1,13 +1,10 @@
 # Nexavey
-
 <p align="center">
   <img src="images/image_0.png" width="500" />
 </p>
 
-## Compilation
-
-### (Linux)
-To compile you need GLFW and CMake installed on your system.
+## Compilation (linux only)
+To compile you need GLFW and CMake and Ninja installed on your system.
 <br>
 If above requirements are fulfilled, just run the following
 ```bash
@@ -17,3 +14,6 @@ ninja
 ./Nexavey
 ```
 <br>
+
+> **Note:**
+> This project is currently on hold due to personal matters, but I plan to return to it ASAP.
