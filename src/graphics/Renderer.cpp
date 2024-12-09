@@ -29,10 +29,27 @@ namespace nex {
     void Renderer::Tick() {
         m_entities[0]->SetRotation((float)glfwGetTime() * 100, glm::vec3(1.0f, 1.0f, 0.0f));
         m_entities[1]->SetRotation(-(float)glfwGetTime() * 100, glm::vec3(0.0f, 1.0f, 0.0f));
-        m_entities[0]->SetPosition(glm::vec3(-0.8f, 0.0f, -1.0f));
-        m_entities[1]->SetPosition(glm::vec3(0.8f, 0.0f, -1.0f));
-        m_entities[0]->SetScale(glm::vec3(0.5f));
-        m_entities[1]->SetScale(glm::vec3(0.5f));
+
+        glm::vec3 center = glm::vec3(0.0f, 0.0f, -5.0f);
+
+        float R = 2.0f;
+        float radius = 1.0f;
+
+        float angle1 = glfwGetTime() * 4.0f;
+        float angle2 = angle1 + glm::pi<float>() / 2.0f;
+
+        float x1 = (R + radius * cos(angle1)) * cos(angle1 / 10.0f);
+        float y1 = sin(angle1);
+        float z1 = (R + radius * cos(angle1)) * sin(angle1 / 10.0f);
+
+        float x2 = (R + radius * cos(angle2)) * cos(angle2 / 10.0f);
+        float y2 = sin(angle2);
+        float z2 = (R + radius * cos(angle2)) * sin(angle1 / 10.0f);
+
+        m_entities[0]->SetPosition(center + glm::vec3(x1, y1, z1));
+        m_entities[1]->SetPosition(center + glm::vec3(x2, y2, z2));
+        m_entities[0]->SetScale(glm::vec3(0.4f));
+        m_entities[1]->SetScale(glm::vec3(0.4f));
 
         Clear();
 
