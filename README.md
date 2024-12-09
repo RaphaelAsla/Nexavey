@@ -4,7 +4,7 @@
 </p>
 
 ## Compilation (linux only)
-To compile you need GLFW and CMake and Ninja installed on your system.
+To compile you need GLFW, CMake and Ninja installed on your system.
 <br>
 If above requirements are fulfilled, just run the following
 ```bash
