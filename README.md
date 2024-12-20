@@ -16,4 +16,4 @@ ninja
 <br>
 
 > **Note:**
-> This project is currently on hold due to personal matters, but I plan to return to it ASAP.
+> This project is currently on hold as I wanted to focus more on my studies, but I plan to return to it ASAP.
