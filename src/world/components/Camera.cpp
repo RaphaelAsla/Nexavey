@@ -58,7 +58,7 @@ namespace nex {
     }
 
     void Camera::ProcessInput() {
-        float velocity = m_movement_speed * 0.1f;  // Adjust for consistent movement speed
+        float velocity = m_movement_speed * 0.1f;
 
         glm::vec3 flat_front = glm::normalize(glm::vec3(m_front.x, 0.0f, m_front.z));
         glm::vec3 flat_up    = glm::normalize(glm::vec3(0.0f, m_up.y, 0.0f));
@@ -87,7 +87,6 @@ namespace nex {
             m_position -= flat_up * velocity;
         }
 
-        // Handle mouse input for looking around
         glm::vec2 current_mouse_pos = Input::GetMousePos();
         if (Input::m_first_mouse) {
             Input::m_last_mouse_pos = current_mouse_pos;
@@ -96,7 +95,7 @@ namespace nex {
         }
 
         float xoffset           = current_mouse_pos.x - Input::m_last_mouse_pos.x;
-        float yoffset           = Input::m_last_mouse_pos.y - current_mouse_pos.y;  // Reversed since y-coordinates range from bottom to top
+        float yoffset           = Input::m_last_mouse_pos.y - current_mouse_pos.y;
         Input::m_last_mouse_pos = current_mouse_pos;
 
         xoffset *= m_mouse_sensitivity;
@@ -117,7 +116,7 @@ namespace nex {
     }
 
     void Camera::UpdateCameraVectors() {
-        // Calculate the new front vector
+        // Re-calculate the new front vector
         glm::vec3 front;
         front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
         front.y = sin(glm::radians(m_pitch));

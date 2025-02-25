@@ -27,7 +27,6 @@ namespace nex {
 
         glfwSetFramebufferSizeCallback(m_window, FramebufferSizeCallback);
 
-        // Set cursor to captured mode for FPS-style camera
         glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
         Logger::Log("Window initialization completed successfully, Window::Initialize()", Logger::DEBUG);
