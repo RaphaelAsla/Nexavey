@@ -8,9 +8,9 @@
 namespace nex {
     class Camera : public Component {
       public:
-        Camera() = default;
-        Camera(const glm::vec3& position);
+        Camera()  = default;
         ~Camera() = default;
+
         void Initialize();
         void OnCreate();
         void OnDelete();
@@ -28,15 +28,18 @@ namespace nex {
       private:
         void ProcessInput();
         void UpdateCameraVectors();
+
         glm::mat4 m_view_matrix;
         glm::mat4 m_projection_matrix;
         glm::vec3 m_position;
         glm::vec3 m_right;
+        glm::vec3 m_front;
+        glm::vec3 m_up;
 
-        float yaw;
-        float pitch;
-        float mouse_speed;
-        float mouse_sensitivity;
-        float zoom = 45.0f;
+        float m_yaw;
+        float m_pitch;
+        float m_mouse_speed;
+        float m_mouse_sensitivity;
+        float m_zoom = 45.0f;
     };
 }  // namespace nex

@@ -5,7 +5,7 @@ namespace nex {
 
     class Component {
       public:
-        Component() = default;
+        Component()          = default;
         virtual ~Component() = default;
 
         virtual void Initialize() {};

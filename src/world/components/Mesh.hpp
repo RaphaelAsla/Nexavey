@@ -27,18 +27,18 @@ namespace nex {
         void OnDelete();
         void OnTick();
 
-        void SetParent(Entity* parent);
+        void    SetParent(Entity* parent);
         Entity* GetParent();
 
         void SetMaterial(const std::shared_ptr<Material>& material);
         void SetGeometry(const std::vector<VertexData>& vertex_data, const std::vector<unsigned int>& indices);
 
       private:
-        std::vector<VertexData> m_vertex_data;
+        std::vector<VertexData>   m_vertex_data;
         std::vector<unsigned int> m_indices;
-        Material* m_material = nullptr;
-        unsigned int m_VAO;
-        unsigned int m_VBO;
-        unsigned int m_EBO;
+        Material*                 m_material = nullptr;
+        unsigned int              m_VAO;
+        unsigned int              m_VBO;
+        unsigned int              m_EBO;
     };
 }  // namespace nex

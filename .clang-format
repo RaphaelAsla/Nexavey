@@ -9,6 +9,9 @@ AllowShortBlocksOnASingleLine: 'false'
 AllowShortCaseLabelsOnASingleLine: 'false'
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: 'false'
+AlignConsecutiveMacros: true
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
 RequiresClausePosition: 'OwnLine'
 IndentRequiresClause: 'false'
 BinPackArguments: 'true'

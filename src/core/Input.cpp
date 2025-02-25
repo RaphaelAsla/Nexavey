@@ -4,7 +4,9 @@
 #include "Window.hpp"
 
 namespace nex {
-    GLFWwindow* Input::m_window = nullptr;
+    GLFWwindow* Input::m_window         = nullptr;
+    bool        Input::m_first_mouse    = false;
+    glm::vec2   Input::m_last_mouse_pos = glm::vec2(0.0f, 0.0f);
 
     void Input::Initialize() {
         m_window = Window::GetGLFWwindow();

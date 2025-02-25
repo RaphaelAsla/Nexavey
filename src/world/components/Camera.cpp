@@ -1,13 +1,13 @@
 #include "Camera.hpp"
 
 #include "../../core/Input.hpp"
+#include "../../core/Logger.hpp"
 #include "../../core/Window.hpp"
 #include "../Entity.hpp"
 
 namespace nex {
-    Camera::Camera(const glm::vec3& position) : m_position(position) {};
-
     void Camera::Initialize() {
+        m_position = m_parent->GetPosition();
         ComputeViewMatrix();
         ComputeProjectionMatrix();
     }
@@ -18,7 +18,7 @@ namespace nex {
 
     void Camera::OnTick() {
         m_parent->SetPosition(m_position);
-        m_view_matrix = ComputeViewMatrix();
+        m_view_matrix       = ComputeViewMatrix();
         m_projection_matrix = ComputeProjectionMatrix();
         UpdateCameraVectors();
         ProcessInput();
@@ -37,11 +37,12 @@ namespace nex {
     }
 
     const glm::mat4 Camera::ComputeViewMatrix() {
-        return glm::lookAt(m_position, m_position * glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::vec3 target = m_position + m_front;
+        return glm::lookAt(m_position, target, m_up);
     }
 
     const glm::mat4 Camera::ComputeProjectionMatrix() {
-        return glm::perspective(glm::radians(zoom), (float)Window::GetWidth() / Window::GetHeight(), 0.1f, 100.0f);
+        return glm::perspective(glm::radians(m_zoom), (float)Window::GetWidth() / Window::GetHeight(), 0.1f, 100.0f);
     }
 
     void Camera::ProcessInput() {
@@ -57,11 +58,43 @@ namespace nex {
         if (Input::GetKey(GLFW_KEY_A)) {
             m_position -= m_right * 0.1f;
         }
+
+        // Handle mouse input
+        glm::vec2 current_mouse_pos = Input::GetMousePos();
+        if (Input::m_first_mouse) {
+            // Skip delta calculation on the first frame
+            Input::m_last_mouse_pos = current_mouse_pos;
+            Input::m_first_mouse    = false;
+        }
+
+        glm::vec2 delta         = current_mouse_pos - Input::m_last_mouse_pos;
+        Input::m_last_mouse_pos = current_mouse_pos;
+
+        // Apply mouse movement to adjust camera orientation
+        float sensitivity = 0.1f;  // Adjust sensitivity as needed
+        delta *= sensitivity;
+
+        // Update camera orientation (pitch and yaw)
+        m_pitch += -delta.y;  // Invert y-axis movement for natural control
+        m_yaw += delta.x;
+
+        // Clamp pitch to avoid gimbal lock
+        if (m_pitch > 89.0f)
+            m_pitch = 89.0f;
+        if (m_pitch < -89.0f)
+            m_pitch = -89.0f;
+
+        UpdateCameraVectors();
     }
 
     void Camera::UpdateCameraVectors() {
-        // also re-calculate the Right and Up vector
-        m_right = glm::normalize(glm::cross(
-            glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+        glm::vec3 front;
+        front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+        front.y = sin(glm::radians(m_pitch));
+        front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+        m_front = glm::normalize(front);
+
+        m_right = glm::normalize(glm::cross(m_front, glm::vec3(0.0f, 1.0f, 0.0f)));
+        m_up    = glm::normalize(glm::cross(m_right, m_front));
     }
 }  // namespace nex

@@ -4,10 +4,10 @@
 #include "glad/gl.h"
 
 namespace nex {
-    int Window::m_width = 1280;
-    int Window::m_height = 720;
-    std::string Window::m_window_title = "Nexavey";
-    GLFWwindow* Window::m_window = nullptr;
+    int                     Window::m_width         = 1280;
+    int                     Window::m_height        = 720;
+    std::string             Window::m_window_title  = "Nexavey";
+    GLFWwindow*             Window::m_window        = nullptr;
     std::shared_ptr<Camera> Window::m_active_camera = nullptr;
 
     void Window::Initialize() {

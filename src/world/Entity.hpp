@@ -10,7 +10,7 @@
 namespace nex {
     class Entity {
       public:
-        Entity() = default;
+        Entity()  = default;
         ~Entity() = default;
 
         void Initialize();
@@ -32,9 +32,9 @@ namespace nex {
 
       private:
         std::vector<std::shared_ptr<Component>> m_componenets;
-        glm::vec3 m_position = glm::vec3(0.0f);
-        glm::vec3 m_scale = glm::vec3(1.0f);
-        glm::mat4 m_rotation = glm::mat4(1.0f);
-        glm::mat4 m_transform_martix = glm::mat4(1.0f);
+        glm::vec3                               m_position         = glm::vec3(0.0f);
+        glm::vec3                               m_scale            = glm::vec3(1.0f);
+        glm::mat4                               m_rotation         = glm::mat4(1.0f);
+        glm::mat4                               m_transform_martix = glm::mat4(1.0f);
     };
 }  // namespace nex
