@@ -8,7 +8,7 @@
 namespace nex {
     class Camera : public Component {
       public:
-        Camera()  = default;
+        Camera();
         ~Camera() = default;
 
         void Initialize();
@@ -38,8 +38,14 @@ namespace nex {
 
         float m_yaw;
         float m_pitch;
-        float m_mouse_speed;
+        float m_zoom;
+        float m_movement_speed;
         float m_mouse_sensitivity;
-        float m_zoom = 45.0f;
+
+        static constexpr float YAW         = -90.0f;
+        static constexpr float PITCH       = 0.0f;
+        static constexpr float SPEED       = 2.0f;
+        static constexpr float SENSITIVITY = 0.2f;
+        static constexpr float ZOOM        = 45.0f;
     };
 }  // namespace nex

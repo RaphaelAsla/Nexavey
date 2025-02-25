@@ -1,11 +1,23 @@
 #include "Camera.hpp"
 
 #include "../../core/Input.hpp"
-#include "../../core/Logger.hpp"
 #include "../../core/Window.hpp"
 #include "../Entity.hpp"
 
 namespace nex {
+    Camera::Camera()
+        : m_position(glm::vec3(0.0f, 0.0f, 0.0f))
+        , m_right(glm::vec3(1.0f, 0.0f, 0.0f))
+        , m_front(glm::vec3(0.0f, 0.0f, -1.0f))
+        , m_up(glm::vec3(0.0f, 1.0f, 0.0f))
+        , m_yaw(YAW)
+        , m_pitch(PITCH)
+        , m_zoom(ZOOM)
+        , m_movement_speed(SPEED)
+        , m_mouse_sensitivity(SENSITIVITY) {
+        UpdateCameraVectors();
+    }
+
     void Camera::Initialize() {
         m_position = m_parent->GetPosition();
         ComputeViewMatrix();
@@ -46,54 +58,73 @@ namespace nex {
     }
 
     void Camera::ProcessInput() {
+        float velocity = m_movement_speed * 0.1f;  // Adjust for consistent movement speed
+
+        glm::vec3 flat_front = glm::normalize(glm::vec3(m_front.x, 0.0f, m_front.z));
+        glm::vec3 flat_up    = glm::normalize(glm::vec3(0.0f, m_up.y, 0.0f));
+
+        // Forward/Backward
         if (Input::GetKey(GLFW_KEY_W)) {
-            m_position += glm::vec3(0.0f, 0.0f, -1.0f) * 0.1f;
+            m_position += flat_front * velocity;
         }
         if (Input::GetKey(GLFW_KEY_S)) {
-            m_position -= glm::vec3(0.0f, 0.0f, -1.0f) * 0.1f;
+            m_position -= flat_front * velocity;
+        }
+
+        // Left/Right
+        if (Input::GetKey(GLFW_KEY_A)) {
+            m_position -= m_right * velocity;
         }
         if (Input::GetKey(GLFW_KEY_D)) {
-            m_position += m_right * 0.1f;
-        }
-        if (Input::GetKey(GLFW_KEY_A)) {
-            m_position -= m_right * 0.1f;
+            m_position += m_right * velocity;
         }
 
-        // Handle mouse input
+        // Up/Down
+        if (Input::GetKey(GLFW_KEY_SPACE)) {
+            m_position += flat_up * velocity;
+        }
+        if (Input::GetKey(GLFW_KEY_LEFT_CONTROL)) {
+            m_position -= flat_up * velocity;
+        }
+
+        // Handle mouse input for looking around
         glm::vec2 current_mouse_pos = Input::GetMousePos();
         if (Input::m_first_mouse) {
-            // Skip delta calculation on the first frame
             Input::m_last_mouse_pos = current_mouse_pos;
             Input::m_first_mouse    = false;
+            return;
         }
 
-        glm::vec2 delta         = current_mouse_pos - Input::m_last_mouse_pos;
+        float xoffset           = current_mouse_pos.x - Input::m_last_mouse_pos.x;
+        float yoffset           = Input::m_last_mouse_pos.y - current_mouse_pos.y;  // Reversed since y-coordinates range from bottom to top
         Input::m_last_mouse_pos = current_mouse_pos;
 
-        // Apply mouse movement to adjust camera orientation
-        float sensitivity = 0.1f;  // Adjust sensitivity as needed
-        delta *= sensitivity;
+        xoffset *= m_mouse_sensitivity;
+        yoffset *= m_mouse_sensitivity;
 
-        // Update camera orientation (pitch and yaw)
-        m_pitch += -delta.y;  // Invert y-axis movement for natural control
-        m_yaw += delta.x;
+        m_yaw += xoffset;
+        m_pitch += yoffset;
 
-        // Clamp pitch to avoid gimbal lock
-        if (m_pitch > 89.0f)
+        // Constrain pitch
+        if (m_pitch > 89.0f) {
             m_pitch = 89.0f;
-        if (m_pitch < -89.0f)
+        }
+        if (m_pitch < -89.0f) {
             m_pitch = -89.0f;
+        }
 
         UpdateCameraVectors();
     }
 
     void Camera::UpdateCameraVectors() {
+        // Calculate the new front vector
         glm::vec3 front;
         front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
         front.y = sin(glm::radians(m_pitch));
         front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
         m_front = glm::normalize(front);
 
+        // Re-calculate the right and up vector
         m_right = glm::normalize(glm::cross(m_front, glm::vec3(0.0f, 1.0f, 0.0f)));
         m_up    = glm::normalize(glm::cross(m_right, m_front));
     }
