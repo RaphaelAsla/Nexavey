@@ -30,7 +30,9 @@ namespace nex {
         m_entities[0]->SetRotation((float)glfwGetTime() * 100, glm::vec3(1.0f, 1.0f, 0.0f));
         m_entities[1]->SetRotation(-(float)glfwGetTime() * 100, glm::vec3(0.0f, 1.0f, 0.0f));
 
-        glm::vec3 center = glm::vec3(0.0f, 0.0f, -5.0f);
+        glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
+
+        // glm::vec3 center = glm::vec3(0.0f, 0.0f, -5.0f);
 
         // float R      = 2.0f;
         // float radius = 1.0f;
@@ -185,7 +187,8 @@ namespace nex {
         // Camera
         auto active_camera = std::make_shared<Camera>();
         camera->AddComponent(active_camera);
-        camera->SetPosition(glm::vec3(0.0f, 0.0f, 3.0f));
+        camera->SetPosition(glm::vec3(0.0f, 8.0f, 0.0f));
+        camera->Initialize();
         Window::m_active_camera = active_camera;
 
         m_entities.emplace_back(rectangle);
