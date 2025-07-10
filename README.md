@@ -16,4 +16,4 @@ ninja
 <br>
 
 > **Note:**
-> This project is currently on hold as I wanted to focus more on my studies and I also plan to re-write it using Vulkan after my exams.
+> This project is currently being re-written in Vulkan, code will be updated once I clean it up a bit.
