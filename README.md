@@ -17,3 +17,8 @@ ninja
 
 > **Note:**
 > This project is currently being re-written in Vulkan, code will be updated once I clean it up a bit.
+
+### Sneak peak of Vulkan
+<p align="center">
+  <img src="images/vulkan.png" width="500" />
+</p>
