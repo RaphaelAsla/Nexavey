@@ -1,4 +1,4 @@
-# VNexavey
+# Nexavey
 A graphics engine created with the Vulkan API for personal learning and experimentation.  
 Currently in early stages of development.
 
@@ -22,7 +22,7 @@ If above requirements are fulfilled, just run the following
 mkdir build && cd build
 CXX=clang++ cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
 ninja
-./VNexavey
+./Nexavey
 ```
 <br>
 
