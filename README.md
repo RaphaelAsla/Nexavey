@@ -8,7 +8,7 @@ Currently in early stages of development.
 - [x] Directional lighting and shadow mapping
 - [x] Point lights
 
-## Planned features For Near Future
+## Planned Features For Near Future
 - [ ] glTF model loading (with PBR support)
 - [ ] Omnidirectional shadow maps
 - [ ] Mipmaps for textures
