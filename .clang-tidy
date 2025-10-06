@@ -1,0 +1,31 @@
+Checks: '-*,readability-identifier-naming'
+
+CheckOptions:
+  # Class names: CamelCase
+  - key:             readability-identifier-naming.ClassCase
+    value:           CamelCase
+
+  # Function names: camelCase
+  - key:             readability-identifier-naming.FunctionCase
+    value:           camelBack
+
+  # Variables (local, global): snake_case
+  - key:             readability-identifier-naming.VariableCase
+    value:           lower_case
+
+  # Class member variables: m_snake_case
+  - key:             readability-identifier-naming.PrivateMemberPrefix
+    value:           m_
+  - key:             readability-identifier-naming.PrivateMemberCase
+    value:           lower_case
+
+  # Optionally for public/protected members (if you want m_ prefix)
+  - key:             readability-identifier-naming.PublicMemberPrefix
+    value:           m_
+  - key:             readability-identifier-naming.PublicMemberCase
+    value:           lower_case
+
+  - key:             readability-identifier-naming.ProtectedMemberPrefix
+    value:           m_
+  - key:             readability-identifier-naming.ProtectedMemberCase
+    value:           lower_case
