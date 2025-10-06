@@ -9,10 +9,11 @@ Currently in early stages of development.
 - [x] Point lights
 
 ## Planned Features For Near Future
-- [ ] glTF model loading (with PBR support)
+- [ ] glTF model loading
 - [ ] Omnidirectional shadow maps
 - [ ] Mipmaps for textures
 - [ ] ImGui integration
+- [ ] PBR Lighting
 
 ## Compilation (linux only)
 To compile you need GLFW, CMake and Ninja installed on your system.
