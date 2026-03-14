@@ -22,10 +22,6 @@ target_link_libraries(Nexavey
     vulkan
     dl
     pthread
-    X11
-    Xxf86vm
-    Xrandr
-    Xi
 )
 
 add_custom_target(compile_shaders ALL
