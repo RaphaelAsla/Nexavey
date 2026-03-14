@@ -24,7 +24,7 @@ namespace nex {
     void NexWindow::initWindow() {
         glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         m_window = glfwCreateWindow(m_width, m_height, m_window_name.c_str(), nullptr, nullptr);
 
